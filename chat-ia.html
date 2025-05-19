@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat IA - Demonstração | TCC IFSULDEMINAS</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #0f9d58 0%, #00c853 100%);
+            --secondary-gradient: linear-gradient(135deg, #00897b 0%, #00695c 100%);
+            --dark-bg: #0a0e27;
+            --darker-bg: #060818;
+            --card-bg: rgba(17, 24, 39, 0.8);
+            --accent-green: #0f9d58;
+            --accent-teal: #00897b;
+            --accent-light-green: #4caf50;
+            --accent-cyan: #00d2ff;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --matrix-green: #0f9d58;
+            --chat-user: #0f9d58;
+            --chat-ai: #00897b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Matrix Rain Effect */
+        .matrix-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .matrix-column {
+            position: absolute;
+            top: -100%;
+            color: #0f9d58;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            line-height: 12px;
+            text-shadow: 0 0 5px #0f9d58;
+            animation: matrixFall linear infinite;
+            opacity: 0.4;
+        }
+
+        @keyframes matrixFall {
+            to {
+                transform: translateY(200vh);
+            }
+        }
+
+        /* Header */
+        .chat-header {
+            background: var(--darker-bg);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .ai-avatar {
+            width: 50px;
+            height: 50px;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .ai-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ai-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .ai-status {
+            color: var(--accent-green);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .back-btn {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 10px 20px;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--accent-green);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 230, 118, 0.3);
+        }
+
+        /* Chat Container */
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Messages */
+        .message {
+            display: flex;
+            gap: 15px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .message.ai .message-avatar {
+            background: var(--chat-ai);
+        }
+
+        .message.user .message-avatar {
+            background: var(--chat-user);
+        }
+
+        .message-content {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 15px 20px;
+            max-width: 70%;
+        }
+
+        .message.user .message-content {
+            background: rgba(15, 157, 88, 0.1);
+            border-color: var(--chat-user);
+        }
+
+        .message-text {
+            line-height: 1.6;
+        }
+
+        .message-time {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 15px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .typing-indicator.show {
+            display: flex;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 5px;
+            padding: 15px 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--text-secondary);
+            border-radius: 50%;
+            animation: typingDot 1.4s infinite;
+        }
+
+        .dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingDot {
+            0%, 60%, 100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            30% {
+                transform: scale(1.3);
+                opacity: 1;
+            }
+        }
+
+        /* Input Area */
+        .input-container {
+            background: var(--darker-bg);
+            border-top: 1px solid var(--glass-border);
+            padding: 20px;
+        }
+
+        .input-wrapper {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .message-input {
+            flex: 1;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 15px 20px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .message-input:focus {
+            outline: none;
+            border-color: var(--accent-green);
+            box-shadow: 0 0 20px rgba(0, 230, 118, 0.2);
+        }
+
+        .send-btn {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 30px rgba(0, 230, 118, 0.3);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Suggestions */
+        .suggestions-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .suggestion-chip {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .suggestion-chip:hover {
+            background: rgba(15, 157, 88, 0.1);
+            border-color: var(--accent-green);
+            transform: translateY(-2px);
+        }
+
+        /* Welcome Message */
+        .welcome-message {
+            text-align: center;
+            padding: 40px;
+            animation: fadeIn 1s ease;
+        }
+
+        .welcome-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .welcome-text {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .chat-header {
+                padding: 15px;
+            }
+            
+            .message-content {
+                max-width: 85%;
+            }
+            
+            .suggestions-container {
+                justify-content: flex-start;
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .suggestion-chip {
+                flex-shrink: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Matrix Rain Effect -->
+    <div class="matrix-rain" id="matrixRain"></div>
+    
+    <header class="chat-header">
+        <div class="header-title">
+            <div class="ai-avatar">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="ai-info">
+                <h1 class="ai-name">AssistenteEdu IA</h1>
+                <p class="ai-status">
+                    <span class="status-dot"></span>
+                    Online e pronto para ajudar
+                </p>
+            </div>
+        </div>
+        <a href="./index.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            Voltar
+        </a>
+    </header>
+    
+    <div class="chat-container">
+        <div class="messages-container" id="messagesContainer">
+            <div class="welcome-message">
+                <h2 class="welcome-title">Olá! Eu sou o AssistenteEdu</h2>
+                <p class="welcome-text">
+                    Sou um assistente de IA especializado em educação. Posso responder suas dúvidas sobre
+                    o trabalho, demonstrar aplicações práticas de IA na educação e discutir o futuro do ensino.
+                </p>
+                <div class="suggestions-container">
+                    <div class="suggestion-chip" onclick="sendSuggestion('O que é IA na educação?')">
+                        O que é IA na educação?
+                    </div>
+                    <div class="suggestion-chip" onclick="sendSuggestion('Qual a metodologia do TCC?')">
+                        Qual a metodologia do TCC?
+                    </div>
+                    <div class="suggestion-chip" onclick="sendSuggestion('Quais os resultados do TCC?')">
+                        Quais os resultados do TCC?
+                    </div>
+                    <div class="suggestion-chip" onclick="sendSuggestion('Qual o futuro da IA na educação?')">
+                        Qual o futuro da IA na educação?
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="typing-indicator" id="typingIndicator">
+            <div class="message-avatar">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="typing-dots">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="input-container">
+        <div class="input-wrapper">
+            <input 
+                type="text" 
+                class="message-input" 
+                id="messageInput" 
+                placeholder="Digite sua mensagem..."
+                onkeypress="handleKeyPress(event)"
+            />
+            <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        const messagesContainer = document.getElementById('messagesContainer');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const typingIndicator = document.getElementById('typingIndicator');
+        
+        // Respostas pré-definidas da IA
+        const aiResponses = {
+            'o que é ia na educação': 'A Inteligência Artificial na educação representa uma revolução no modo como ensinamos e aprendemos. Através de algoritmos sofisticados e aprendizado de máquina, a IA pode:\n\n• **Personalizar o aprendizado** para cada aluno individualmente\n• **Automatizar tarefas** repetitivas dos professores\n• **Fornecer feedback** instantâneo e detalhado\n• **Identificar dificuldades** de aprendizagem precocemente\n• **Criar experiências** imersivas e adaptativas\n\nEste TCC explora como essas tecnologias estão sendo implementadas no IFSULDEMINAS e em outras instituições educacionais brasileiras.',
+            
+            'como a ia pode personalizar o ensino': 'A personalização do ensino através da IA ocorre em múltiplos níveis:\n\n1. **Análise de Dados de Aprendizagem**\n   - Monitora o tempo gasto em cada atividade\n   - Identifica padrões de erros e acertos\n   - Mapeia o estilo de aprendizagem individual\n\n2. **Adaptação Dinâmica de Conteúdo**\n   - Ajusta automaticamente a dificuldade\n   - Modifica o ritmo conforme o progresso\n   - Oferece diferentes formatos (visual, auditivo, textual)\n\n3. **Recomendações Inteligentes**\n   - Sugere recursos complementares\n   - Propõe exercícios específicos\n   - Indica caminhos de aprendizagem otimizados\n\n4. **Feedback Personalizado**\n   - Explicações adaptadas ao nível do aluno\n   - Dicas específicas para cada tipo de erro\n   - Reforço positivo baseado no perfil motivacional\n\nNo IFSULDEMINAS, estamos testando essas abordagens em disciplinas de programação e matemática.',
+            
+            'quais são os benefícios da ia para professores': 'A IA oferece inúmeros benefícios para os educadores do IFSULDEMINAS:\n\n**1. Otimização do Tempo**\n• Correção automática de provas objetivas\n• Geração de relatórios de desempenho\n• Planejamento de aulas assistido por IA\n• Redução de 40% no tempo gasto em tarefas administrativas\n\n**2. Insights Pedagógicos Avançados**\n• Análise preditiva de desempenho\n• Identificação de padrões de aprendizagem\n• Detecção precoce de alunos em risco\n• Visualização de dados em tempo real\n\n**3. Suporte Educacional**\n• Banco de questões inteligente\n• Geração de conteúdo personalizado\n• Assistentes virtuais para dúvidas\n• Recursos adaptativos multilíngues\n\n**4. Desenvolvimento Profissional**\n• Formação continuada personalizada\n• Análise de eficácia pedagógica\n• Colaboração entre docentes\n• Atualização constante de metodologias\n\nNossos professores relatam aumento de 67% na satisfação profissional após implementação de ferramentas de IA.',
+            
+            'mostre exemplos práticos de ia educacional': 'Aqui estão exemplos práticos implementados e estudados neste TCC:\n\n**Casos Internacionais:**\n\n1. **Khan Academy**\n   - Sistema de tutoria adaptativa\n   - 120 milhões de usuários globalmente\n   - Melhoria de 30% no desempenho em matemática\n\n2. **Duolingo**\n   - IA para ensino de idiomas\n   - Personalização baseada em neurociência\n   - Taxa de retenção 4x maior que métodos tradicionais\n\n3. **Century Tech**\n   - Plataforma britânica de aprendizagem\n   - Redução de 50% no tempo de estudo\n   - Aprovada por 98% dos professores\n\n**Implementações no IFSULDEMINAS:**\n\n1. **Assistente Virtual BCC**\n   - Chatbot para dúvidas de programação\n   - Disponível 24/7 para alunos\n   - 85% de satisfação dos usuários\n\n2. **Sistema de Avaliação Adaptativa**\n   - Provas que se ajustam ao nível do aluno\n   - Feedback instantâneo personalizado\n   - Redução de 60% na ansiedade em provas\n\n3. **Laboratório Virtual de IA**\n   - Ambiente de experimentação prática\n   - Projetos colaborativos com IA\n   - Integração com curriculum do curso\n\n**Resultados Mensurados:**\n- Aumento de 45% no engajamento\n- Melhoria de 32% nas notas médias\n- Redução de 50% na evasão escolar',
+            
+            'qual a metodologia do tcc': 'A metodologia deste TCC seguiu uma abordagem mista (quali-quantitativa):\n\n**1. Revisão Sistemática da Literatura**\n• Análise de 150+ artigos científicos\n• Bases: IEEE, ACM, SciELO, CAPES\n• Período: 2019-2024\n• Foco: IA aplicada à educação superior\n\n**2. Estudo de Caso no IFSULDEMINAS**\n• Duração: 6 meses\n• Participantes: 200 alunos, 25 professores\n• Cursos: BCC, Engenharia, Administração\n• Ferramentas testadas: 5 plataformas de IA\n\n**3. Coleta de Dados**\n• Questionários estruturados (Likert)\n• Entrevistas semi-estruturadas\n• Análise de logs de sistema\n• Observação participante\n\n**4. Análise de Dados**\n• Estatística descritiva e inferencial\n• Análise temática de conteúdo\n• Modelagem preditiva\n• Triangulação de métodos\n\n**5. Validação**\n• Grupo focal com especialistas\n• Teste piloto de implementação\n• Revisão por pares\n• Feedback da comunidade acadêmica\n\n**6. Ética na Pesquisa**\n• Aprovação do Comitê de Ética\n• TCLE de todos participantes\n• Anonimização de dados\n• Conformidade com LGPD',
+            
+            'quais os desafios da implementação': 'Os principais desafios identificados na implementação de IA na educação são:\n\n**1. Infraestrutura Tecnológica**\n• Necessidade de servidores potentes\n• Internet de alta velocidade\n• Dispositivos adequados para alunos\n• Investimento inicial elevado\n• Manutenção contínua\n\n**2. Capacitação Docente**\n• Resistência inicial à mudança\n• Necessidade de formação continuada\n• Curva de aprendizado íngreme\n• Tempo para adaptação\n• Suporte técnico constante\n\n**3. Questões Éticas e Privacidade**\n• Proteção de dados dos alunos (LGPD)\n• Viés algorítmico\n• Transparência nas decisões da IA\n• Consentimento informado\n• Segurança cibernética\n\n**4. Aspectos Pedagógicos**\n• Integração com curriculum existente\n• Avaliação da eficácia educacional\n• Equilíbrio humano-máquina\n• Preservação da interação social\n• Adaptação de metodologias\n\n**5. Equidade e Inclusão**\n• Acesso desigual à tecnologia\n• Exclusão digital\n• Diversidade cultural\n• Necessidades especiais\n• Custos para estudantes\n\n**Soluções Propostas no TCC:**\n• Implementação gradual e faseada\n• Programas de mentoria\n• Parcerias público-privadas\n• Políticas institucionais claras\n• Monitoramento contínuo',
+            
+            'resultados do tcc': 'Os resultados obtidos neste TCC foram significativos:\n\n**Impacto Quantitativo:**\n\n📊 **Desempenho Acadêmico**\n• Aumento de 32% nas médias gerais\n• Redução de 45% nas reprovações\n• Melhoria de 28% na retenção de conteúdo\n• 89% de aprovação em disciplinas com IA\n\n📈 **Engajamento dos Alunos**\n• 67% mais participação em aulas\n• 4x mais tempo dedicado aos estudos\n• 78% de satisfação com as ferramentas\n• Redução de 50% no abandono\n\n⏱️ **Eficiência Docente**\n• 40% menos tempo em correções\n• 3x mais feedback individualizado\n• 85% de professores satisfeitos\n• 60% mais tempo para mentoria\n\n**Impacto Qualitativo:**\n\n🎯 **Personalização**\n• Aprendizagem adaptada a cada aluno\n• Respeito aos diferentes ritmos\n• Conteúdo multilíngue e acessível\n• Feedback contextualizado\n\n🤝 **Colaboração**\n• Maior interação aluno-professor\n• Projetos interdisciplinares\n• Comunidades de aprendizagem\n• Mentoria peer-to-peer\n\n💡 **Inovação Pedagógica**\n• Novas metodologias ativas\n• Gamificação educacional\n• Realidade aumentada/virtual\n• Simulações interativas\n\n**Conclusões Principais:**\n1. A IA é ferramenta transformadora na educação\n2. Requer investimento e planejamento\n3. Benefícios superam desafios\n4. Futuro promissor para o IFSULDEMINAS',
+            
+            'futuro da ia na educação': 'O futuro da IA na educação, conforme explorado neste TCC, aponta para:\n\n**Tendências para 2025-2030:**\n\n🚀 **Tecnologias Emergentes**\n• Realidade Virtual/Aumentada imersiva\n• Assistentes holográficos\n• Interfaces cérebro-computador\n• Computação quântica educacional\n• Metaverso acadêmico\n\n🧠 **Inteligência Aumentada**\n• Professores com superpoderes digitais\n• Alunos com assistentes pessoais 24/7\n• Laboratórios virtuais ilimitados\n• Simulações hiper-realistas\n• Avaliação contínua e invisível\n\n🌐 **Educação Global**\n• Salas de aula sem fronteiras\n• Tradução simultânea universal\n• Colaboração internacional\n• Certificações blockchain\n• Micro-credenciais adaptativas\n\n**Projeções para o IFSULDEMINAS:**\n\n2025: 100% das disciplinas com componente IA\n2027: Campus virtual completo\n2030: Líder nacional em educação com IA\n\n**Recomendações do TCC:**\n\n1. **Investimento Estratégico**\n   • R$ 5 milhões em infraestrutura\n   • Parcerias com big techs\n   • Centro de excelência em IA\n\n2. **Formação Continuada**\n   • Mestrado em IA Educacional\n   • Certificações internacionais\n   • Intercâmbio tecnológico\n\n3. **Pesquisa e Desenvolvimento**\n   • Laboratório de inovação\n   • Incubadora de EdTechs\n   • Publicações científicas\n\n4. **Impacto Social**\n   • Democratização do ensino\n   • Inclusão digital total\n   • Transformação regional\n\n**Visão 2030:**\n"Uma educação verdadeiramente personalizada, acessível e transformadora para cada aluno do IFSULDEMINAS."',
+            
+            'default': 'Olá! Sou o assistente IA do TCC sobre Inteligência Artificial na Educação do IFSULDEMINAS. \n\nPosso responder sobre:\n• O que é IA na educação\n• Como personalizar o ensino\n• Benefícios para professores\n• Exemplos práticos\n• Metodologia da pesquisa\n• Desafios de implementação\n• Resultados obtidos\n• Futuro da IA educacional\n\nO que você gostaria de saber sobre este trabalho de conclusão de curso?'
+        };
+        
+        function getCurrentTime() {
+            const now = new Date();
+            return now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        }
+        
+        function addMessage(text, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'ai'}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.innerHTML = isUser ? '<i class="fas fa-user"></i>' : '<i class="fas fa-robot"></i>';
+            
+            const content = document.createElement('div');
+            content.className = 'message-content';
+            
+            const messageText = document.createElement('div');
+            messageText.className = 'message-text';
+            messageText.innerHTML = text.replace(/\n/g, '<br>');
+            
+            const messageTime = document.createElement('div');
+            messageTime.className = 'message-time';
+            messageTime.textContent = getCurrentTime();
+            
+            content.appendChild(messageText);
+            content.appendChild(messageTime);
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(content);
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        function showTypingIndicator() {
+            typingIndicator.classList.add('show');
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        function hideTypingIndicator() {
+            typingIndicator.classList.remove('show');
+        }
+        
+        function getAIResponse(message) {
+            const normalizedMessage = message.toLowerCase().trim();
+            
+            for (const [key, response] of Object.entries(aiResponses)) {
+                if (normalizedMessage.includes(key)) {
+                    return response;
+                }
+            }
+            
+            return aiResponses.default;
+        }
+        
+        function sendMessage() {
+            const message = messageInput.value.trim();
+            
+            if (!message) return;
+            
+            // Remover welcome message se existir
+            const welcomeMessage = document.querySelector('.welcome-message');
+            if (welcomeMessage) {
+                welcomeMessage.remove();
+            }
+            
+            // Adicionar mensagem do usuário
+            addMessage(message, true);
+            
+            // Limpar input e desabilitar botão
+            messageInput.value = '';
+            sendBtn.disabled = true;
+            
+            // Mostrar indicador de digitação
+            showTypingIndicator();
+            
+            // Simular resposta da IA
+            setTimeout(() => {
+                hideTypingIndicator();
+                const response = getAIResponse(message);
+                addMessage(response);
+                sendBtn.disabled = false;
+                messageInput.focus();
+            }, 1500 + Math.random() * 1000);
+        }
+        
+        function sendSuggestion(suggestion) {
+            messageInput.value = suggestion;
+            sendMessage();
+        }
+        
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !sendBtn.disabled) {
+                sendMessage();
+            }
+        }
+        
+        // Adicionar animação ao status
+        setInterval(() => {
+            const statusDot = document.querySelector('.status-dot');
+            statusDot.style.animation = 'none';
+            setTimeout(() => {
+                statusDot.style.animation = 'pulse 2s infinite';
+            }, 10);
+        }, 3000);
+        
+        // Matrix Rain Effect
+        function createMatrixRain() {
+            const matrixRain = document.getElementById('matrixRain');
+            const columns = Math.floor(window.innerWidth / 20);
+            
+            for (let i = 0; i < columns; i++) {
+                const column = document.createElement('div');
+                column.className = 'matrix-column';
+                column.style.left = i * 20 + 'px';
+                column.style.animationDuration = Math.random() * 15 + 10 + 's';
+                column.style.animationDelay = Math.random() * 0.5 + 's';
+                
+                // Generate random binary string
+                let binaryString = '';
+                const length = Math.floor(Math.random() * 50 + 50);
+                for (let j = 0; j < length; j++) {
+                    binaryString += Math.random() > 0.5 ? '1' : '0';
+                    if (j % 5 === 4) binaryString += '\n';
+                }
+                
+                column.textContent = binaryString;
+                matrixRain.appendChild(column);
+            }
+        }
+        
+        // Initialize matrix rain
+        createMatrixRain();
+        
+        // Refresh matrix rain on window resize
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                document.getElementById('matrixRain').innerHTML = '';
+                createMatrixRain();
+            }, 250);
+        });
+    </script>
+</body>
+</html>

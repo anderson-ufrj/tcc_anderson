@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apresentação - IA na Educação | TCC IFSULDEMINAS</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #0f9d58 0%, #00c853 100%);
+            --secondary-gradient: linear-gradient(135deg, #00897b 0%, #00695c 100%);
+            --dark-bg: #0a0e27;
+            --darker-bg: #060818;
+            --card-bg: rgba(17, 24, 39, 0.8);
+            --accent-green: #0f9d58;
+            --accent-teal: #00897b;
+            --accent-light-green: #4caf50;
+            --accent-cyan: #00d2ff;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --matrix-green: #0f9d58;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            overflow: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Matrix Rain Effect */
+        .matrix-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .matrix-column {
+            position: absolute;
+            top: -100%;
+            color: #0f9d58;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            line-height: 12px;
+            text-shadow: 0 0 5px #0f9d58;
+            animation: matrixFall linear infinite;
+            opacity: 0.4;
+        }
+
+        @keyframes matrixFall {
+            to {
+                transform: translateY(200vh);
+            }
+        }
+
+        .presentation-container {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .slides-wrapper {
+            position: relative;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Background Blur */
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(2px);
+            z-index: -1;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .slide-content {
+            max-width: 1200px;
+            width: 100%;
+            text-align: center;
+            animation: slideIn 0.8s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Navigation */
+        .nav-buttons {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .nav-btn:hover {
+            background: var(--accent-green);
+            transform: scale(1.1);
+            box-shadow: 0 10px 30px rgba(0, 230, 118, 0.3);
+        }
+
+        /* Slide Progress */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--glass-bg);
+            z-index: 100;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-gradient);
+            transition: width 0.3s ease;
+        }
+
+        /* Slide Styles */
+        .slide-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 900;
+            margin-bottom: 30px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .slide-subtitle {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+        }
+
+        .slide-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: var(--text-primary);
+            margin-bottom: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Logo Container */
+        .logo-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 50;
+        }
+
+        .ifsuldeminas-logo {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 10px;
+            padding: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* IFSULDEMINAS Badge */
+        .institution-badge {
+            background: var(--glass-bg);
+            border: 2px solid var(--accent-green);
+            border-radius: 30px;
+            padding: 10px 20px;
+            display: block;
+            margin: 20px auto;
+            animation: pulse 2s infinite;
+            text-align: center;
+            width: fit-content;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .institution-text {
+            color: var(--accent-green);
+            font-weight: 700;
+            font-style: italic;
+            display: inline-block;
+            overflow: hidden;
+            white-space: nowrap;
+            margin: 0;
+            letter-spacing: 0.15em;
+            animation: typing 8s steps(40, end) infinite;
+            border-right: 3px solid var(--accent-green);
+            max-width: 0;
+        }
+
+        @keyframes typing {
+            0% { max-width: 0; }
+            40% { max-width: 100%; }
+            60% { max-width: 100%; }
+            70% { max-width: 80%; }
+            80% { max-width: 90%; }
+            85% { max-width: 80%; }
+            90% { max-width: 0; }
+            100% { max-width: 0; }
+        }
+
+        /* Exit Button */
+        .exit-btn {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .exit-btn:hover {
+            background: var(--danger);
+            transform: scale(1.1);
+            box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3);
+        }
+
+        /* Feature Grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .feature-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-green);
+            box-shadow: 0 20px 40px rgba(0, 230, 118, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--accent-green);
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .feature-desc {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            margin: 50px 0;
+            padding: 0 20px;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            position: relative;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .timeline-dot {
+            width: 20px;
+            height: 20px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            margin-right: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .timeline-content {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 20px;
+            flex: 1;
+        }
+
+        .timeline-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent-green);
+            margin-bottom: 10px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-green);
+            box-shadow: 0 10px 30px rgba(0, 230, 118, 0.2);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+
+        /* Code Block */
+        .code-block {
+            background: var(--darker-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 30px auto;
+            max-width: 800px;
+        }
+
+        .code-header {
+            background: var(--glass-bg);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .code-lang {
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        .code-content {
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .slide-title {
+                font-size: 2rem;
+            }
+            
+            .slide-text {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Matrix Rain Effect -->
+    <div class="matrix-rain" id="matrixRain"></div>
+    
+    <div class="presentation-container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar"></div>
+        </div>
+        
+        <a href="./index.html" class="exit-btn">
+            <i class="fas fa-times"></i>
+        </a>
+        
+        <div class="slides-wrapper">
+            <!-- Slide 1: Capa -->
+            <div class="slide active" data-slide="1">
+                <div class="slide-content">
+                    <h1 class="slide-title">Inteligência Artificial na Educação</h1>
+                    <p class="slide-subtitle">Transformando o Futuro do Ensino</p>
+                    <p class="slide-text">
+                        Como a IA está revolucionando os métodos de ensino e aprendizagem
+                        no contexto do IFSULDEMINAS
+                    </p>
+                    <div class="institution-badge">
+                        <p class="institution-text">IFSULDEMINAS - Campus Muzambinho - Bacharelado em Ciência da Computação</p>
+                    </div>
+                    <div style="margin-top: 40px;">
+                        <p style="color: var(--text-secondary);">Anderson Henrique</p>
+                        <p style="color: var(--text-secondary);">Trabalho de Conclusão de Curso - 2024</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 2: Introdução -->
+            <div class="slide" data-slide="2">
+                <div class="slide-content">
+                    <h2 class="slide-title">O Desafio da Educação Moderna</h2>
+                    <p class="slide-text">
+                        No século XXI, a educação enfrenta desafios sem precedentes:
+                    </p>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <h3 class="feature-title">Diversidade</h3>
+                            <p class="feature-desc">
+                                Alunos com diferentes ritmos, estilos e necessidades de aprendizagem
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <h3 class="feature-title">Globalização</h3>
+                            <p class="feature-desc">
+                                Preparar estudantes para um mercado de trabalho global e dinâmico
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-laptop"></i>
+                            </div>
+                            <h3 class="feature-title">Tecnologia</h3>
+                            <p class="feature-desc">
+                                Integrar ferramentas digitais de forma efetiva no processo educacional
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 3: O que é IA na Educação -->
+            <div class="slide" data-slide="3">
+                <div class="slide-content">
+                    <h2 class="slide-title">O Que é IA na Educação?</h2>
+                    <p class="slide-subtitle">Inteligência Artificial Aplicada ao Ensino</p>
+                    <p class="slide-text">
+                        A IA na educação refere-se ao uso de algoritmos e sistemas inteligentes para:
+                    </p>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <h3 class="timeline-title">Personalizar o Aprendizado</h3>
+                                <p>Adaptar conteúdo e ritmo para cada aluno individualmente</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <h3 class="timeline-title">Automatizar Tarefas</h3>
+                                <p>Liberar tempo dos professores para atividades mais estratégicas</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <h3 class="timeline-title">Fornecer Insights</h3>
+                                <p>Análise preditiva do desempenho e identificação de dificuldades</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 4: Estatísticas -->
+            <div class="slide" data-slide="4">
+                <div class="slide-content">
+                    <h2 class="slide-title">Impacto da IA na Educação</h2>
+                    <p class="slide-subtitle">Números que Impressionam</p>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">67%</div>
+                            <div class="stat-label">Aumento no engajamento dos alunos</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">45%</div>
+                            <div class="stat-label">Redução no tempo de correção</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">89%</div>
+                            <div class="stat-label">Melhoria na personalização</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">73%</div>
+                            <div class="stat-label">Satisfação dos educadores</div>
+                        </div>
+                    </div>
+                    <p class="slide-text" style="margin-top: 40px;">
+                        * Dados coletados em pesquisa realizada no IFSULDEMINAS - Campus Muzambinho
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Slide 5: Exemplos Práticos -->
+            <div class="slide" data-slide="5">
+                <div class="slide-content">
+                    <h2 class="slide-title">Aplicações Práticas no IFSULDEMINAS</h2>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <h3 class="feature-title">Assistente Virtual BCC</h3>
+                            <p class="feature-desc">
+                                Chatbot para dúvidas de programação disponível 24/7
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h3 class="feature-title">Avaliação Adaptativa</h3>
+                            <p class="feature-desc">
+                                Provas que se ajustam ao nível individual do aluno
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-vr-cardboard"></i>
+                            </div>
+                            <h3 class="feature-title">Laboratório Virtual</h3>
+                            <p class="feature-desc">
+                                Ambiente de experimentação com IA e realidade virtual
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 6: Código Exemplo -->
+            <div class="slide" data-slide="6">
+                <div class="slide-content">
+                    <h2 class="slide-title">Demonstração Técnica</h2>
+                    <p class="slide-subtitle">Sistema de Recomendação Educacional</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">Python</span>
+                            <button class="nav-btn" style="width: auto; padding: 5px 15px; height: auto;">
+                                <i class="fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                        <pre class="code-content">import tensorflow as tf
+from sklearn.preprocessing import MinMaxScaler
+
+class SistemaRecomendacaoEducacional:
+    def __init__(self):
+        self.modelo = self.criar_modelo()
+        
+    def criar_modelo(self):
+        modelo = tf.keras.Sequential([
+            tf.keras.layers.Dense(128, activation='relu'),
+            tf.keras.layers.Dropout(0.2),
+            tf.keras.layers.Dense(64, activation='relu'),
+            tf.keras.layers.Dense(32, activation='softmax')
+        ])
+        modelo.compile(optimizer='adam', 
+                      loss='categorical_crossentropy',
+                      metrics=['accuracy'])
+        return modelo
+    
+    def recomendar_conteudo(self, perfil_aluno):
+        predicao = self.modelo.predict(perfil_aluno)
+        return self.mapear_conteudo(predicao)
+        
+# Implementação no IFSULDEMINAS
+sistema = SistemaRecomendacaoEducacional()
+recomendacao = sistema.recomendar_conteudo(aluno_perfil)
+</pre>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 7: Desafios -->
+            <div class="slide" data-slide="7">
+                <div class="slide-content">
+                    <h2 class="slide-title">Desafios e Considerações</h2>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h3 class="feature-title">Privacidade de Dados</h3>
+                            <p class="feature-desc">
+                                Proteção das informações sensíveis dos alunos (LGPD)
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-balance-scale"></i>
+                            </div>
+                            <h3 class="feature-title">Equidade no Acesso</h3>
+                            <p class="feature-desc">
+                                Garantir que todos tenham acesso às tecnologias
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-user-graduate"></i>
+                            </div>
+                            <h3 class="feature-title">Formação Docente</h3>
+                            <p class="feature-desc">
+                                Capacitação contínua para uso efetivo das ferramentas
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 8: Futuro -->
+            <div class="slide" data-slide="8">
+                <div class="slide-content">
+                    <h2 class="slide-title">O Futuro da Educação com IA</h2>
+                    <p class="slide-subtitle">Tendências para 2025-2030</p>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <h3 class="timeline-title">2025: IA em 100% das disciplinas</h3>
+                                <p>Integração completa em todo o curriculum do IFSULDEMINAS</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <h3 class="timeline-title">2027: Campus Virtual Completo</h3>
+                                <p>Experiências imersivas com realidade virtual e aumentada</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <h3 class="timeline-title">2030: Liderança Nacional</h3>
+                                <p>IFSULDEMINAS como referência em educação com IA</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 9: Conclusão -->
+            <div class="slide" data-slide="9">
+                <div class="slide-content">
+                    <h2 class="slide-title">Conclusão</h2>
+                    <p class="slide-text" style="font-size: 1.4rem; margin-bottom: 40px;">
+                        A Inteligência Artificial não é apenas uma ferramenta, mas um 
+                        catalisador de transformação educacional que permite:
+                    </p>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <h3 class="feature-title">Educação Personalizada</h3>
+                            <p class="feature-desc">
+                                Cada aluno aprende no seu ritmo e estilo
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <h3 class="feature-title">Resultados Mensuráveis</h3>
+                            <p class="feature-desc">
+                                Dados concretos sobre eficácia do ensino
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-infinity"></i>
+                            </div>
+                            <h3 class="feature-title">Inovação Contínua</h3>
+                            <p class="feature-desc">
+                                Evolução constante das metodologias
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 10: Obrigado -->
+            <div class="slide" data-slide="10">
+                <div class="slide-content">
+                    <h1 class="slide-title">Obrigado!</h1>
+                    <p class="slide-subtitle">Anderson Henrique</anl:parameter>
+                    <p class="slide-text">
+                        Trabalho de Conclusão de Curso<br>
+                        Bacharelado em Ciência da Computação<br>
+                        IFSULDEMINAS - Campus Muzambinho
+                    </p>
+                    <div class="institution-badge" style="margin-top: 40px;">
+                        <p class="institution-text">IFSULDEMINAS - Educação, Ciência e Tecnologia</p>
+                    </div>
+                    <div style="margin-top: 40px;">
+                        <a href="./index.html" class="nav-btn" style="width: auto; padding: 15px 40px; height: auto; border-radius: 30px;">
+                            <i class="fas fa-home"></i> Voltar ao Início
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav-buttons">
+            <button class="nav-btn" id="prevBtn">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <span style="color: var(--text-secondary); margin: 0 20px;">
+                <span id="currentSlide">1</span> / <span id="totalSlides">10</span>
+            </span>
+            <button class="nav-btn" id="nextBtn">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+        
+        <div class="logo-container">
+            <img src="./assets/images/logo1IF.png" alt="IFSULDEMINAS" class="ifsuldeminas-logo">
+        </div>
+    </div>
+    
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const progressBar = document.getElementById('progressBar');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const currentSlideSpan = document.getElementById('currentSlide');
+        const totalSlidesSpan = document.getElementById('totalSlides');
+        
+        totalSlidesSpan.textContent = totalSlides;
+        
+        function updateSlide() {
+            slides.forEach((slide, index) => {
+                slide.classList.toggle('active', index === currentSlide);
+            });
+            
+            // Atualizar barra de progresso
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = `${progress}%`;
+            
+            // Atualizar contador
+            currentSlideSpan.textContent = currentSlide + 1;
+            
+            // Desabilitar botões nas extremidades
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === totalSlides - 1;
+        }
+        
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlide();
+            }
+        }
+        
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlide();
+            }
+        }
+        
+        // Event listeners
+        nextBtn.addEventListener('click', nextSlide);
+        prevBtn.addEventListener('click', prevSlide);
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+            if (e.key === 'Escape') window.location.href = './index.html';
+        });
+        
+        // Touch navigation for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleGesture();
+        });
+        
+        function handleGesture() {
+            if (touchEndX < touchStartX - 50) nextSlide();
+            if (touchEndX > touchStartX + 50) prevSlide();
+        }
+        
+        // Matrix Rain Effect
+        function createMatrixRain() {
+            const matrixRain = document.getElementById('matrixRain');
+            const columns = Math.floor(window.innerWidth / 20);
+            
+            for (let i = 0; i < columns; i++) {
+                const column = document.createElement('div');
+                column.className = 'matrix-column';
+                column.style.left = i * 20 + 'px';
+                column.style.animationDuration = Math.random() * 15 + 10 + 's';
+                column.style.animationDelay = Math.random() * 0.5 + 's';
+                
+                // Generate random binary string
+                let binaryString = '';
+                const length = Math.floor(Math.random() * 50 + 50);
+                for (let j = 0; j < length; j++) {
+                    binaryString += Math.random() > 0.5 ? '1' : '0';
+                    if (j % 5 === 4) binaryString += '\n';
+                }
+                
+                column.textContent = binaryString;
+                matrixRain.appendChild(column);
+            }
+        }
+        
+        // Initialize matrix rain
+        createMatrixRain();
+        
+        // Refresh matrix rain on window resize
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                document.getElementById('matrixRain').innerHTML = '';
+                createMatrixRain();
+            }, 250);
+        });
+        
+        // Initialize
+        updateSlide();
+    </script>
+</body>
+</html>

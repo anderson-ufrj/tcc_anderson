@@ -1,0 +1,42 @@
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Build
+dist/
+build/
+gh-pages-build/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temp
+*.tmp
+*.temp
+.cache/
+
+# Logs
+logs/
+*.log
+
+# Keys
+*.pem
+*.key
+.env
+.env.local
+
+# Test
+coverage/
+.nyc_output/
+
+# Misc
+*.bak
+*.orig
