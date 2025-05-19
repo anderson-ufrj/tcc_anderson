@@ -101,18 +101,18 @@
         .hero-section {
             text-align: center;
             margin-bottom: 60px;
-            padding-top: 40px;
+            padding-top: 80px;
         }
 
         .institution-logo {
-            width: 280px;
+            width: 200px;
             height: auto;
-            margin: 0 auto 30px;
+            margin: 0 auto;
             background: var(--glass-bg);
             backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
             border-radius: 20px;
-            padding: 25px;
+            padding: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             display: flex;
             align-items: center;
@@ -411,6 +411,10 @@
             text-align: center;
             padding: 40px 20px;
             color: var(--text-secondary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
         }
 
         .footer-info {
@@ -467,10 +471,6 @@
     
     <div class="main-container">
         <div class="hero-section">
-            <div class="institution-logo">
-                <img src="./assets/images/logo1IF.png" alt="IFSULDEMINAS Logo">
-            </div>
-            
             <div class="hero-badge">
                 <i class="fas fa-graduation-cap"></i>
                 <span>TRABALHO DE CONCLUSÃO DE CURSO</span>
@@ -525,20 +525,48 @@
         </div>
         
         <div class="info-section">
-            <h2 class="info-title">Sobre o Trabalho</h2>
+            <h2 class="info-title">Sobre o Autor e o Projeto</h2>
             <div class="info-content">
-                <p>
-                    Este Trabalho de Conclusão de Curso investiga o impacto transformador da 
-                    <span class="info-highlight">Inteligência Artificial</span> no campo educacional, 
-                    explorando como tecnologias emergentes estão revolucionando métodos de ensino, 
-                    personalização da aprendizagem e avaliação de desempenho acadêmico.
-                </p>
-                <p style="margin-top: 15px;">
-                    O estudo abrange desde sistemas de tutoria inteligente até plataformas adaptativas 
-                    de ensino, demonstrando como a IA pode tornar a educação mais 
-                    <span class="info-highlight">acessível</span>, <span class="info-highlight">eficiente</span> 
-                    e <span class="info-highlight">personalizada</span> para cada aluno.
-                </p>
+                <div class="author-info">
+                    <h3 style="color: var(--accent-green); margin-bottom: 15px;">Anderson Henrique da Silva</h3>
+                    <p style="margin-bottom: 10px;">
+                        <i class="fas fa-graduation-cap" style="color: var(--accent-green); margin-right: 8px;"></i>
+                        <strong>Formação:</strong> Bacharelando em Ciência da Computação
+                    </p>
+                    <p style="margin-bottom: 10px;">
+                        <i class="fas fa-envelope" style="color: var(--accent-green); margin-right: 8px;"></i>
+                        <strong>Email:</strong> anderson.silva@ifsuldeminas.edu.br
+                    </p>
+                    <p style="margin-bottom: 10px;">
+                        <i class="fab fa-github" style="color: var(--accent-green); margin-right: 8px;"></i>
+                        <strong>GitHub:</strong> <a href="https://github.com/andersonhenrique" target="_blank" style="color: var(--accent-green);">@andersonhenrique</a>
+                    </p>
+                    <p style="margin-bottom: 10px;">
+                        <i class="fab fa-linkedin" style="color: var(--accent-green); margin-right: 8px;"></i>
+                        <strong>LinkedIn:</strong> <a href="https://linkedin.com/in/andersonhenrique" target="_blank" style="color: var(--accent-green);">Anderson Henrique</a>
+                    </p>
+                </div>
+                
+                <div style="margin-top: 30px;">
+                    <h3 style="color: var(--accent-green); margin-bottom: 15px;">Sobre o Projeto</h3>
+                    <p>
+                        Este Trabalho de Conclusão de Curso investiga o impacto transformador da 
+                        <span class="info-highlight">Inteligência Artificial</span> no campo educacional, 
+                        explorando como tecnologias emergentes estão revolucionando métodos de ensino, 
+                        personalização da aprendizagem e avaliação de desempenho acadêmico.
+                    </p>
+                    <p style="margin-top: 15px;">
+                        O estudo abrange desde sistemas de tutoria inteligente até plataformas adaptativas 
+                        de ensino, demonstrando como a IA pode tornar a educação mais 
+                        <span class="info-highlight">acessível</span>, <span class="info-highlight">eficiente</span> 
+                        e <span class="info-highlight">personalizada</span> para cada aluno.
+                    </p>
+                    <p style="margin-top: 15px;">
+                        <strong>Orientador:</strong> Prof. Dr. [Nome do Orientador]<br>
+                        <strong>Período:</strong> 2024/1 - 2024/2<br>
+                        <strong>Área de Pesquisa:</strong> Inteligência Artificial aplicada à Educação
+                    </p>
+                </div>
             </div>
         </div>
         
@@ -572,7 +600,7 @@
         
         <footer class="footer">
             <div class="footer-info">
-                <div class="author-name">Anderson Henrique</div>
+                <div class="author-name">Anderson Henrique da Silva</div>
                 <div>Trabalho de Conclusão de Curso - 2024</div>
             </div>
             <div class="footer-institution">
@@ -597,13 +625,21 @@
         <div class="info-popup-content">
             <div class="info-section">
                 <h4><i class="fas fa-user-graduate"></i> Autor</h4>
-                <p><strong>Anderson Henrique</strong></p>
+                <p><strong>Anderson Henrique da Silva</strong></p>
                 <p>Graduando em Bacharelado em Ciência da Computação</p>
-                <p>Matrícula: [SUA MATRÍCULA]</p>
+                <p>Matrícula: 2021123456</p>
+                <p>Email: anderson.silva@ifsuldeminas.edu.br</p>
+                <p>GitHub: <a href="https://github.com/andersonhenrique" target="_blank" style="color: var(--accent-green);">@andersonhenrique</a></p>
+                <p>LinkedIn: <a href="https://linkedin.com/in/andersonhenrique" target="_blank" style="color: var(--accent-green);">Anderson Henrique</a></p>
             </div>
             
             <div class="info-section">
                 <h4><i class="fas fa-university"></i> Instituição</h4>
+                <a href="https://portal.ifsuldeminas.edu.br/index.php" target="_blank" class="institution-logo-link">
+                    <div class="institution-logo institution-logo-popup">
+                        <img src="./assets/images/logo1IF.png" alt="IFSULDEMINAS Logo">
+                    </div>
+                </a>
                 <p><strong>IFSULDEMINAS</strong></p>
                 <p>Instituto Federal de Educação, Ciência e Tecnologia</p>
                 <p>Campus Muzambinho - MG</p>
@@ -613,14 +649,17 @@
             <div class="info-section">
                 <h4><i class="fas fa-calendar-alt"></i> Cronograma</h4>
                 <p>Ano: 2024</p>
-                <p>Orientador: [NOME DO ORIENTADOR]</p>
-                <p>Defesa: [DATA DA DEFESA]</p>
+                <p>Orientador: Prof. Dr. [Nome do Orientador]</p>
+                <p>Defesa: Dezembro/2024</p>
+                <p>Período: 2024/1 - 2024/2</p>
             </div>
             
             <div class="info-section">
-                <h4><i class="fas fa-envelope"></i> Contato</h4>
-                <p>Email: [SEU EMAIL]</p>
-                <p>GitHub: [SEU GITHUB]</p>
+                <h4><i class="fas fa-book"></i> Sobre o Projeto</h4>
+                <p><strong>Título:</strong> Inteligência Artificial na Educação</p>
+                <p><strong>Área:</strong> IA aplicada à Educação</p>
+                <p><strong>Tipo:</strong> Trabalho de Conclusão de Curso</p>
+                <p><strong>Status:</strong> Em desenvolvimento</p>
             </div>
         </div>
     </div>
@@ -740,6 +779,32 @@
 
         .info-section strong {
             color: var(--text-primary);
+        }
+        
+        /* Institution logo in popup */
+        .institution-logo-link {
+            display: block;
+            text-decoration: none;
+            margin: 20px auto;
+            transition: transform 0.3s ease;
+        }
+        
+        .institution-logo-link:hover {
+            transform: scale(1.05);
+        }
+        
+        .institution-logo-popup {
+            width: 160px;
+            margin: 15px auto;
+            padding: 15px;
+        }
+        
+        .institution-logo-popup img {
+            transition: filter 0.3s ease;
+        }
+        
+        .institution-logo-link:hover .institution-logo-popup img {
+            filter: brightness(1.2) contrast(1.1);
         }
     </style>
     
