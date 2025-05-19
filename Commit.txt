@@ -1,0 +1,11 @@
+Pr# 1. Navegue até a pasta do seu projeto
+cd ~/Documentos/tcc_anderson
+
+# 2. Adicione TODAS as alterações de uma vez
+git add .
+
+# 3. Faça o commit com uma mensagem descritiva
+git commit -m "Descrição das alterações feitas"
+
+# 4. Envie tudo para o GitHub
+git push origin main
