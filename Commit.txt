@@ -7,5 +7,6 @@ git add .
 # 3. Faça o commit com uma mensagem descritiva
 git commit -m "Descrição das alterações feitas"
 
-# 4. Envie tudo para o GitHub
-git push origin main
+# 4. Integre as mudanças na sua branch atual
+git fetch origin
+git pull origin main

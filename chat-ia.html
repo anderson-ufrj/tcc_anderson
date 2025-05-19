@@ -414,6 +414,9 @@
             }
         }
     </style>
+    <!-- Translation Scripts -->
+    <script src="./assets/js/translations.js"></script>
+    <script src="./assets/js/language-selector.js"></script>
 </head>
 <body>
     <!-- Matrix Rain Effect -->
@@ -425,40 +428,29 @@
                 <i class="fas fa-robot"></i>
             </div>
             <div class="ai-info">
-                <h1 class="ai-name">AssistenteEdu IA</h1>
+                <h1 class="ai-name" data-translate="chat.ai.name">AssistenteEdu IA</h1>
                 <p class="ai-status">
                     <span class="status-dot"></span>
-                    Online e pronto para ajudar
+                    <span data-translate="chat.ai.status">Online e pronto para ajudar</span>
                 </p>
             </div>
         </div>
         <a href="./index.html" class="back-btn">
             <i class="fas fa-arrow-left"></i>
-            Voltar
+            <span data-translate="nav.back">Voltar</span>
         </a>
     </header>
     
     <div class="chat-container">
         <div class="messages-container" id="messagesContainer">
             <div class="welcome-message">
-                <h2 class="welcome-title">Olá! Eu sou o AssistenteEdu</h2>
-                <p class="welcome-text">
+                <h2 class="welcome-title" data-translate="chat.welcome.title">Olá! Eu sou o AssistenteEdu</h2>
+                <p class="welcome-text" data-translate="chat.welcome.text">
                     Sou um assistente de IA especializado em educação. Posso responder suas dúvidas sobre
                     o trabalho, demonstrar aplicações práticas de IA na educação e discutir o futuro do ensino.
                 </p>
-                <div class="suggestions-container">
-                    <div class="suggestion-chip" onclick="sendSuggestion('O que é IA na educação?')">
-                        O que é IA na educação?
-                    </div>
-                    <div class="suggestion-chip" onclick="sendSuggestion('Qual a metodologia do TCC?')">
-                        Qual a metodologia do TCC?
-                    </div>
-                    <div class="suggestion-chip" onclick="sendSuggestion('Quais os resultados do TCC?')">
-                        Quais os resultados do TCC?
-                    </div>
-                    <div class="suggestion-chip" onclick="sendSuggestion('Qual o futuro da IA na educação?')">
-                        Qual o futuro da IA na educação?
-                    </div>
+                <div class="suggestions-container" id="suggestionsContainer">
+                    <!-- Suggestions will be populated by JavaScript -->
                 </div>
             </div>
         </div>
@@ -482,6 +474,7 @@
                 class="message-input" 
                 id="messageInput" 
                 placeholder="Digite sua mensagem..."
+                data-translate-placeholder="chat.input.placeholder"
                 onkeypress="handleKeyPress(event)"
             />
             <button class="send-btn" id="sendBtn" onclick="sendMessage()">
@@ -495,6 +488,7 @@
         const messageInput = document.getElementById('messageInput');
         const sendBtn = document.getElementById('sendBtn');
         const typingIndicator = document.getElementById('typingIndicator');
+        const suggestionsContainer = document.getElementById('suggestionsContainer');
         
         // Respostas pré-definidas da IA
         const aiResponses = {
@@ -659,6 +653,36 @@
                 document.getElementById('matrixRain').innerHTML = '';
                 createMatrixRain();
             }, 250);
+        });
+        
+        // Populate suggestions based on language
+        function populateSuggestions() {
+            const suggestions = [
+                translate('chat.suggestion1'),
+                translate('chat.suggestion2'),
+                translate('chat.suggestion3'),
+                translate('chat.suggestion4')
+            ];
+            
+            suggestionsContainer.innerHTML = suggestions.map(text => `
+                <div class="suggestion-chip" onclick="sendSuggestion('${text}')">
+                    ${text}
+                </div>
+            `).join('');
+        }
+        
+        // Update suggestions when language changes
+        const originalUpdatePageTranslations = window.updatePageTranslations;
+        window.updatePageTranslations = function() {
+            if (originalUpdatePageTranslations) {
+                originalUpdatePageTranslations();
+            }
+            populateSuggestions();
+        };
+        
+        // Initialize suggestions
+        document.addEventListener('DOMContentLoaded', () => {
+            populateSuggestions();
         });
     </script>
 </body>
